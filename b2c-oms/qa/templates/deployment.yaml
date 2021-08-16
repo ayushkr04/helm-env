@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+        deployedAt: {{ now | date "Mon Jan 2 15:04:05 MST 2006" }}
+        sha: {{ .Values.sha | quote }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "nginx"
+          ports:
+            - containerPort: {{ .Values.container.port }}
+
+  # kubectl set image deployment/{{ .Chart.Name }} {{ .Chart.Name }}=cars24/{{ .Chart.Name }}:marut --record
+
+  {{/*helm upgrade --install release-name --namespace default --values ./production.yml*/}}
