@@ -1,0 +1,17 @@
+replicaCount: 2
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+sha: "sa"
+
+container:
+  port: 8080
+
+configs:
+  ENV: qa
+  namespace: default
+
+service:
+  type: ClusterIP
+  port: 80
